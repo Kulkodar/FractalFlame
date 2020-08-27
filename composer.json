@@ -1,0 +1,12 @@
+{
+  "name": "kulkodar/fractalflame",
+  "description": "An implementation of the Fractal Flame Algorithm by Scott Draves.",
+  "minimum-stability": "stable",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Kevin Winkler",
+      "email": "kevin.winkler@cn-consult.eu"
+    }
+  ],
+}
