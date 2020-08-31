@@ -51,8 +51,8 @@ $flame1 = [
 ];
 $flame1Weights = [0.5, 1];
 
-$iterations = 200000;
-$imageSize = 2024;
+$iterations = 2000000;
+$imageSize = 2024 / 2;
 
 $zoom = 0.3;
 
@@ -81,7 +81,43 @@ for ($i = 0; $i < $iterations; $i++)
 	$xMapped = $x * $imageSize/2 * $zoom + $imageSize/2;
 	$yMapped = $y * $imageSize/2 * $zoom + $imageSize/2;
 
-	imagesetpixel($image, $xMapped, $imageSize - $yMapped, 0xffffff);
+	$col = imagecolorat($image, $xMapped, $imageSize - $yMapped) + 1;
+	imagesetpixel($image, $xMapped, $imageSize - $yMapped, $col);
+}
+
+// cloloring
+{
+	echo "coloring flame\n";
+	$max = 0;
+	for ($i = 0; $i < $imageSize; $i++)
+	{
+		for ($j = 0; $j < $imageSize; $j++)
+		{
+			$col = imagecolorat($image, $i, $j);
+			$max = max($max, $col);
+		}
+	}
+
+	$max = log($max);
+
+	if($max == 0)
+		return;
+
+	for ($i = 0; $i < $imageSize; $i++)
+	{
+		for ($j = 0; $j < $imageSize; $j++)
+		{
+			$col = imagecolorat($image, $i, $j);
+
+			$value = (int)(0xff * (log($col) / $max));
+
+			$newCol = $value;
+			$newCol += $value << 8;
+			$newCol += $value << 16;
+
+			imagesetpixel($image, $i, $j, $newCol);
+		}
+	}
 }
 
 imagepng($image, "output.png", 6);
