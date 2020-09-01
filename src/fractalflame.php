@@ -51,8 +51,12 @@ $flame1 = [
 ];
 $flame1Weights = [0.5, 1];
 
-$iterations = 2000000;
+$iterations = 20000000;
 $imageSize = 2024 / 2;
+
+$iterationsPerStep = $iterations / 100;
+$iterationStep = 0;
+$progress = 0;
 
 $zoom = 0.3;
 
@@ -83,6 +87,13 @@ for ($i = 0; $i < $iterations; $i++)
 
 	$col = imagecolorat($image, $xMapped, $imageSize - $yMapped) + 1;
 	imagesetpixel($image, $xMapped, $imageSize - $yMapped, $col);
+
+	if( ++$iterationStep > $iterationsPerStep )
+	{
+		$iterationStep = 0;
+		$progress += 1;
+		echo "progress:$progress\n";
+	}
 }
 
 // cloloring
