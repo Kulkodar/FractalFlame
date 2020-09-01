@@ -2,23 +2,22 @@
 
 namespace FractalFlame;
 
-use FractalFlame\flames\CustomFlame1;
-
 require_once __DIR__ . "/../vendor/autoload.php";
 require_once __DIR__ . "/variations.php";
+require_once __DIR__ . "/checkarguments.php";
 
-$colorPalette = new ColorPalette(__DIR__ . "/colorPalettes/sky-flesh.map");
+$arguments = checkArguments();
 
-$iterations = 20000000;
-$imageSize = 2024 / 2;
+$flameName = $arguments["flame"] ?? "CustomFlame1";
+$currentFlame = call_user_func(["FractalFlame\\flames\\$flameName", "Create"]);
+$colorPalette = new ColorPalette(__DIR__ . "/colorPalettes/" . $arguments["colorPalette"] ?? "sky-flesh.map");
+$iterations = $arguments["iterations"] ?? 1000000;
+$imageSize = $arguments["imageSize"] ?? 2024;
+$zoom = $arguments["zoom"] ?? 1;
 
 $iterationsPerStep = $iterations / 100;
 $iterationStep = 0;
 $progress = 0;
-
-$zoom = 0.3;
-
-$currentFlame = CustomFlame1::Create();
 
 $image = imagecreatetruecolor($imageSize, $imageSize);
 $imageColorIndex = [];
