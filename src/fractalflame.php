@@ -2,69 +2,12 @@
 
 namespace FractalFlame;
 
+use FractalFlame\flames\CustomFlame1;
+
 require_once __DIR__ . "/../vendor/autoload.php";
 require_once __DIR__ . "/variations.php";
 
 $colorPalette = new ColorPalette(__DIR__ . "/colorPalettes/sky-flesh.map");
-
-$sierpinskiGasket = new Flame(
-	[
-		function ($x, $y)
-		{
-			$c = 0.0;
-			return variations\linear($x * 0.5 + $y * 0 + $c, $x * 1 + $y * 0.5 + 0.5);
-		},
-		function ($x, $y)
-		{
-			return variations\linear($x * 0.5 + $y * 0 + 1, $x * 0 + $y * 0.5 + 0);
-		},
-		function ($x, $y)
-		{
-			return variations\linear($x * 0.5 + $y * 0 + 0, $x * 0 + $y * 0.5 + 1);
-		}
-	],
-	[0.33, 0.66, 1],
-	[0, 0.5, 1]);
-
-$barnsleyFern = new Flame(
-	[
-		function ($x, $y)
-		{
-			return variations\linear($x * 0 + $y * 0 + 0, $x * 0 + $y * 0.16 + 0);
-		},
-		function ($x, $y)
-		{
-			return variations\linear($x * 0.85 + $y * 0.04 + 0, $x * -0.04 + $y * 0.85 + 1.6);
-		},
-		function ($x, $y)
-		{
-			return variations\linear($x * 0.2 + $y * -0.26 + 0, $x * 0.23 + $y * 0.22 + 1.6);
-		},
-		function ($x, $y)
-		{
-			return variations\linear($x * -0.15 + $y * 0.28 + 0, $x * 0.26 + $y * 0.24 + 0.44);
-		}
-	],
-	[0.01, 0.86, 0.93, 1],
-	[0, 0.3, 0.6, 1]);
-
-$flame1 = new Flame(
-	[
-		function ($x, $y)
-		{
-			return variations\swirl($x * 1 + $y * 0 + 0, $x * 0 + $y * 1 + 0);
-		},
-		function ($x, $y)
-		{
-			return variations\swirl($x * .5 + $y * 0 + 1, $x * 0 + $y * .5 + 1);
-		},
-		function ($x, $y)
-		{
-			return variations\spherical($x * 2 + $y * 0 + 0, $x * 0 + $y * 2 + 0);
-		},
-	],
-	[0.3, 0.6, 1],
-	[0.0, 0.5, 1]);
 
 $iterations = 20000000;
 $imageSize = 2024 / 2;
@@ -75,7 +18,7 @@ $progress = 0;
 
 $zoom = 0.3;
 
-$currentFlame = $flame1;
+$currentFlame = CustomFlame1::Create();
 
 $image = imagecreatetruecolor($imageSize, $imageSize);
 $imageColorIndex = [];
