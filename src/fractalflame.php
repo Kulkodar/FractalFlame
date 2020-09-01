@@ -1,6 +1,9 @@
 <?php
 
 require_once "variations.php";
+require_once "colorpalette.php";
+
+$colorPalette = new ColorPalette(__DIR__ . "/colorPalettes/sky-flesh.map");
 
 $sierpinskiGasket = [
 	function ($x, $y)
@@ -137,15 +140,13 @@ for ($i = 0; $i < $iterations; $i++)
 	if($max == 0)
 		return;
 
-	$color1 = [255, 100, 0];
-	$color2 = [255, 255, 100];
-
-	$colorInterpolate = function ($t, $weight) use ($color2, $color1)
+	$colorInterpolate = function ($t, $weight) use ($colorPalette)
 	{
+		$color = $colorPalette->color[$t * 255];
 		$result = [];
-		$result[] = ($color1[0] + ($color2[0] - $color1[0]) * $t) * $weight;
-		$result[] = ($color1[1] + ($color2[1] - $color1[1]) * $t) * $weight;
-		$result[] = ($color1[2] + ($color2[2] - $color1[2]) * $t) * $weight;
+		$result[] = $color[0] * $weight;
+		$result[] = $color[1] * $weight;
+		$result[] = $color[2] * $weight;
 		return $result;
 	};
 
