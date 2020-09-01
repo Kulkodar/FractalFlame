@@ -18,6 +18,7 @@ $sierpinskiGasket = [
 	}
 ];
 $sierpinskiGasketWeights = [0.33, 0.66, 1];
+$sierpinskiGasketColors = [0, 0.5, 1];
 
 $barnsleyFern = [
 	function ($x, $y)
@@ -38,6 +39,7 @@ $barnsleyFern = [
 	}
 ];
 $barnsleyFernWeights = [0.01, 0.86 , 0.93, 1];
+$barnsleyFernColors = [0, 0.3 , 0.6, 1];
 
 $flame1 = [
 	function ($x, $y)
@@ -47,9 +49,14 @@ $flame1 = [
 	function ($x, $y)
 	{
 		return variations\swirl($x * .5 + $y * 0 + 1, $x * 0 + $y * .5 + 1);
-	}
+	},
+	function ($x, $y)
+	{
+		return variations\spherical($x * 2 + $y * 0 + 0, $x * 0 + $y * 2 + 0);
+	},
 ];
-$flame1Weights = [0.5, 1];
+$flame1Weights = [0.3, 0.6, 1];
+$flame1Colors = [0.0, 0.5, 1];
 
 $iterations = 20000000;
 $imageSize = 2024 / 2;
@@ -62,20 +69,31 @@ $zoom = 0.3;
 
 $currentFlame = $flame1;
 $currentWeight = $flame1Weights;
+$currentColorArray = $flame1Colors;
 
 $image = imagecreatetruecolor($imageSize, $imageSize);
+$imageColorIndex = [];
+for ($x = 0; $x < $imageSize; $x++)
+{
+	for ($y = 0; $y < $imageSize; $y++)
+	{
+		$imageColorIndex[$x][$y] = 0;
+	}
+}
 
 $x = rand(-$imageSize/2, $imageSize/2) / $imageSize;
 $y = rand(-$imageSize/2, $imageSize/2) / $imageSize;
 for ($i = 0; $i < $iterations; $i++)
 {
 	$rand = rand(0, 100) / 100;
+	$currentColor = 0;
 
 	for ($f = 0; $f < count($currentFlame); $f++)
 	{
 		if ($rand <= $currentWeight[$f])
 		{
 			$randomFunction = $currentFlame[$f];
+			$currentColor = $currentColorArray[$f];
 			break;
 		}
 	}
@@ -84,6 +102,11 @@ for ($i = 0; $i < $iterations; $i++)
 
 	$xMapped = $x * $imageSize/2 * $zoom + $imageSize/2;
 	$yMapped = $y * $imageSize/2 * $zoom + $imageSize/2;
+
+	if( $xMapped < 0 || $xMapped > $imageSize || $yMapped < 0 || $yMapped > $imageSize)
+		continue;
+
+	$imageColorIndex[$xMapped][$imageSize - $yMapped] = ($imageColorIndex[$xMapped][$imageSize - $yMapped] + $currentColor) / 2;
 
 	$col = imagecolorat($image, $xMapped, $imageSize - $yMapped) + 1;
 	imagesetpixel($image, $xMapped, $imageSize - $yMapped, $col);
@@ -96,7 +119,7 @@ for ($i = 0; $i < $iterations; $i++)
 	}
 }
 
-// cloloring
+// coloring
 {
 	echo "coloring flame\n";
 	$max = 0;
@@ -114,17 +137,30 @@ for ($i = 0; $i < $iterations; $i++)
 	if($max == 0)
 		return;
 
+	$color1 = [255, 100, 0];
+	$color2 = [255, 255, 100];
+
+	$colorInterpolate = function ($t, $weight) use ($color2, $color1)
+	{
+		$result = [];
+		$result[] = ($color1[0] + ($color2[0] - $color1[0]) * $t) * $weight;
+		$result[] = ($color1[1] + ($color2[1] - $color1[1]) * $t) * $weight;
+		$result[] = ($color1[2] + ($color2[2] - $color1[2]) * $t) * $weight;
+		return $result;
+	};
+
 	for ($i = 0; $i < $imageSize; $i++)
 	{
 		for ($j = 0; $j < $imageSize; $j++)
 		{
 			$col = imagecolorat($image, $i, $j);
 
-			$value = (int)(0xff * (log($col) / $max));
+			$value = (log($col) / $max);
 
-			$newCol = $value;
-			$newCol += $value << 8;
-			$newCol += $value << 16;
+			$cFinal = $colorInterpolate($imageColorIndex[$i][$j], $value);
+			$newCol = (int)$cFinal[2];
+			$newCol += (int)$cFinal[1] << 8;
+			$newCol += (int)$cFinal[0] << 16;
 
 			imagesetpixel($image, $i, $j, $newCol);
 		}
