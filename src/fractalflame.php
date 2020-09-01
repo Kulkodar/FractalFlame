@@ -157,6 +157,9 @@ for ($i = 0; $i < $iterations; $i++)
 
 			$value = (log($col) / $max);
 
+			$gamma = 4;
+			$value = $value ** (1/$gamma);
+
 			$cFinal = $colorInterpolate($imageColorIndex[$i][$j], $value);
 			$newCol = (int)$cFinal[2];
 			$newCol += (int)$cFinal[1] << 8;
