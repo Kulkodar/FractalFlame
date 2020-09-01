@@ -13,5 +13,8 @@
     "psr-4": {
       "FractalFlame\\":"src"
     }
+  },
+  "require": {
+    "ext-gd": "*"
   }
 }
