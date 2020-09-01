@@ -1,6 +1,6 @@
 <?php
 
-namespace variations;
+namespace FractalFlame\variations;
 
 // $r = sqrt($x * $x + $y * $y);
 // $theta = atan( $x / $y );

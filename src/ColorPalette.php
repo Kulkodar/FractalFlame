@@ -1,5 +1,7 @@
 <?php
 
+namespace FractalFlame;
+
 class ColorPalette
 {
 	public function __construct($filePath)

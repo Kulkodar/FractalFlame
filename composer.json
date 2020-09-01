@@ -9,4 +9,9 @@
       "email": "kevin.winkler@cn-consult.eu"
     }
   ],
+  "autoload": {
+    "psr-4": {
+      "FractalFlame\\":"src"
+    }
+  }
 }

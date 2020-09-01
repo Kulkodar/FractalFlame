@@ -1,7 +1,9 @@
 <?php
 
-require_once "variations.php";
-require_once "colorpalette.php";
+namespace FractalFlame;
+
+require_once __DIR__ . "/../vendor/autoload.php";
+require_once __DIR__. "/variations.php";
 
 $colorPalette = new ColorPalette(__DIR__ . "/colorPalettes/sky-flesh.map");
 
