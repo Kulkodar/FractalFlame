@@ -31,6 +31,9 @@ for ($x = 0; $x < $imageSize; $x++)
 
 $x = rand(-$imageSize / 2, $imageSize / 2) / $imageSize;
 $y = rand(-$imageSize / 2, $imageSize / 2) / $imageSize;
+
+$c = rand(-$imageSize / 2, $imageSize / 2) / $imageSize;
+
 for ($i = 0; $i < $iterations; $i++)
 {
 	$rand = rand(0, 100) / 100;
@@ -54,7 +57,8 @@ for ($i = 0; $i < $iterations; $i++)
 	if ($xMapped < 0 || $xMapped > $imageSize || $yMapped < 0 || $yMapped > $imageSize)
 		continue;
 
-	$imageColorIndex[$xMapped][$imageSize - $yMapped] = ($imageColorIndex[$xMapped][$imageSize - $yMapped] + $currentColor) / 2;
+	$c =( $c+ $currentColor)/2;
+	$imageColorIndex[$xMapped][$imageSize - $yMapped] = $c;
 
 	$col = imagecolorat($image, $xMapped, $imageSize - $yMapped) + 1;
 	imagesetpixel($image, $xMapped, $imageSize - $yMapped, $col);
