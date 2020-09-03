@@ -49,6 +49,13 @@ function checkArguments()
 			->setValidation(function ($value)
 			{
 				return is_numeric($value) && floatval($value) >= 0;
+			}),
+
+		Option::create('g', "gamma", GetOpt::REQUIRED_ARGUMENT)
+			->setDescription('sets the gamma default: 4')
+			->setValidation(function ($value)
+			{
+				return is_numeric($value) && intval($value) >= 1;
 			})
 	]);
 

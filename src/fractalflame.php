@@ -14,6 +14,7 @@ $colorPalette = new ColorPalette(__DIR__ . "/colorPalettes/" . $arguments["color
 $iterations = $arguments["iterations"] ?? 1000000;
 $imageSize = $arguments["imageSize"] ?? 2024;
 $zoom = $arguments["zoom"] ?? 1;
+$gamma = $arguments["gamma"] ?? 4;
 
 $iterationsPerStep = $iterations / 100;
 $iterationStep = 0;
@@ -29,10 +30,10 @@ for ($x = 0; $x < $imageSize; $x++)
 	}
 }
 
-$x = rand(-$imageSize / 2, $imageSize / 2) / $imageSize;
-$y = rand(-$imageSize / 2, $imageSize / 2) / $imageSize;
+$x = rand(-500000, 500000) / 1000000;
+$y = rand(-500000, 500000) / 1000000;
 
-$c = rand(-$imageSize / 2, $imageSize / 2) / $imageSize;
+$c = rand(-500000, 500000) / 1000000;
 
 for ($i = 0; $i < $iterations; $i++)
 {
@@ -52,16 +53,16 @@ for ($i = 0; $i < $iterations; $i++)
 	list($x, $y) = $randomFunction($x, $y);
 
 	$xMapped = $x * $imageSize / 2 * $zoom + $imageSize / 2;
-	$yMapped = $y * $imageSize / 2 * $zoom + $imageSize / 2;
+	$yMapped = $imageSize - ($y * $imageSize / 2 * $zoom + $imageSize / 2);
 
 	if ($xMapped < 0 || $xMapped > $imageSize || $yMapped < 0 || $yMapped > $imageSize)
 		continue;
 
-	$c =( $c+ $currentColor)/2;
-	$imageColorIndex[$xMapped][$imageSize - $yMapped] = $c;
+	$c = ($c + $currentColor) / 2;
+	$imageColorIndex[$xMapped][$yMapped] = $c;
 
-	$col = imagecolorat($image, $xMapped, $imageSize - $yMapped) + 1;
-	imagesetpixel($image, $xMapped, $imageSize - $yMapped, $col);
+	$frequency = imagecolorat($image, $xMapped, $yMapped) + 1;
+	imagesetpixel($image, $xMapped, $yMapped, $frequency);
 
 	if (++$iterationStep > $iterationsPerStep)
 	{
@@ -79,8 +80,8 @@ for ($i = 0; $i < $iterations; $i++)
 	{
 		for ($j = 0; $j < $imageSize; $j++)
 		{
-			$col = imagecolorat($image, $i, $j);
-			$max = max($max, $col);
+			$frequency = imagecolorat($image, $i, $j);
+			$max = max($max, $frequency);
 		}
 	}
 
@@ -103,11 +104,10 @@ for ($i = 0; $i < $iterations; $i++)
 	{
 		for ($j = 0; $j < $imageSize; $j++)
 		{
-			$col = imagecolorat($image, $i, $j);
+			$frequency = imagecolorat($image, $i, $j);
 
-			$value = (log($col) / $max);
+			$value = (log($frequency) / $max);
 
-			$gamma = 4;
 			$value = $value ** (1 / $gamma);
 
 			$cFinal = $colorInterpolate($imageColorIndex[$i][$j], $value);
