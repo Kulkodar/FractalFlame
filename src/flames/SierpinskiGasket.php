@@ -7,6 +7,10 @@ namespace FractalFlame\flames;
 use FractalFlame\Flame;
 use function FractalFlame\variations\linear;
 
+
+/**
+ * Factory class to create a flame that generates Sierpinski's Gasket.
+ */
 class SierpinskiGasket
 {
 	public static function Create(): Flame

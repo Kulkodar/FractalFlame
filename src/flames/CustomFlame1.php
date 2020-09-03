@@ -8,6 +8,9 @@ use FractalFlame\Flame;
 use function FractalFlame\variations\spherical;
 use function FractalFlame\variations\swirl;
 
+/**
+ * Factory class to create a flame.
+ */
 class CustomFlame1
 {
 	public static function Create(): Flame

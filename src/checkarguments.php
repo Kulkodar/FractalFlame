@@ -7,7 +7,11 @@ use GetOpt\ArgumentException\Missing;
 use GetOpt\GetOpt;
 use GetOpt\Option;
 
-function checkArguments()
+/**
+ * Checks the arguments and returns an associative array with all set options.
+ * @return array associative array with all set options.
+ */
+function checkArguments() : array
 {
 	$getOpt = new GetOpt();
 

@@ -21,12 +21,12 @@ $iterationStep = 0;
 $progress = 0;
 
 $image = imagecreatetruecolor($imageSize, $imageSize);
-$imageColorIndex = [];
+$pixelColorIndex = [];
 for ($x = 0; $x < $imageSize; $x++)
 {
 	for ($y = 0; $y < $imageSize; $y++)
 	{
-		$imageColorIndex[$x][$y] = 0;
+		$pixelColorIndex[$x][$y] = 0;
 	}
 }
 
@@ -40,7 +40,7 @@ for ($i = 0; $i < $iterations; $i++)
 	$rand = rand(0, 100) / 100;
 	$currentColor = 0;
 
-	for ($f = 0; $f < count($currentFlame->functions); $f++)
+	for ($f = 0; $f < count($currentFlame->functions); $f++) // choose function
 	{
 		if ($rand <= $currentFlame->weights[$f])
 		{
@@ -59,7 +59,7 @@ for ($i = 0; $i < $iterations; $i++)
 		continue;
 
 	$c = ($c + $currentColor) / 2;
-	$imageColorIndex[$xMapped][$yMapped] = $c;
+	$pixelColorIndex[$xMapped][$yMapped] = $c;
 
 	$frequency = imagecolorat($image, $xMapped, $yMapped) + 1;
 	imagesetpixel($image, $xMapped, $yMapped, $frequency);
@@ -90,9 +90,9 @@ for ($i = 0; $i < $iterations; $i++)
 	if ($max == 0)
 		return;
 
-	$colorInterpolate = function ($t, $weight) use ($colorPalette)
+	$calculateFinalColor = function ($colorIndex, $weight) use ($colorPalette)
 	{
-		$color = $colorPalette->color[$t * 255];
+		$color = $colorPalette->color[$colorIndex * 255];
 		$result = [];
 		$result[] = $color[0] * $weight;
 		$result[] = $color[1] * $weight;
@@ -110,7 +110,7 @@ for ($i = 0; $i < $iterations; $i++)
 
 			$value = $value ** (1 / $gamma);
 
-			$cFinal = $colorInterpolate($imageColorIndex[$i][$j], $value);
+			$cFinal = $calculateFinalColor($pixelColorIndex[$i][$j], $value);
 			$newCol = (int)$cFinal[2];
 			$newCol += (int)$cFinal[1] << 8;
 			$newCol += (int)$cFinal[0] << 16;
