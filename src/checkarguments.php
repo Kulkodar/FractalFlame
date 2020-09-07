@@ -64,10 +64,6 @@ function checkArguments() : array
 
 		Option::create('o', null, GetOpt::REQUIRED_ARGUMENT)
 			->setDescription('sets the output path/name default:"./output"')
-			->setValidation(function ($value)
-			{
-				return is_numeric($value) && intval($value) >= 1;
-			})
 	]);
 
 	// process arguments and catch user errors
