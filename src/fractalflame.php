@@ -15,7 +15,9 @@ $iterations = $arguments["iterations"] ?? 1000000;
 $imageSize = $arguments["imageSize"] ?? 2024;
 $zoom = $arguments["zoom"] ?? 1;
 $gamma = $arguments["gamma"] ?? 4;
-$outputPath = ($arguments["o"] ?? "./output").".png";
+$outputPath = ($arguments["o"] ?? "./output") . ".png";
+$xOffset = $arguments["xOffset"] ?? 0;
+$yOffset = $arguments["yOffset"] ?? 0;
 
 $iterationsPerStep = $iterations / 100;
 $iterationStep = 0;
@@ -53,8 +55,8 @@ for ($i = 0; $i < $iterations; $i++)
 
 	list($x, $y) = $randomFunction($x, $y);
 
-	$xMapped = $x * $imageSize / 2 * $zoom + $imageSize / 2;
-	$yMapped = $imageSize - ($y * $imageSize / 2 * $zoom + $imageSize / 2);
+	$xMapped = ($x + $xOffset) * $imageSize / 2 * $zoom + $imageSize / 2;
+	$yMapped = $imageSize - (($y + $yOffset) * $imageSize / 2 * $zoom + $imageSize / 2);
 
 	if ($xMapped < 0 || $xMapped > $imageSize || $yMapped < 0 || $yMapped > $imageSize)
 		continue;
