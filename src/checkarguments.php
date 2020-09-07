@@ -63,7 +63,21 @@ function checkArguments() : array
 			}),
 
 		Option::create('o', null, GetOpt::REQUIRED_ARGUMENT)
-			->setDescription('sets the output path/name default:"./output"')
+			->setDescription('sets the output path/name default:"./output"'),
+
+		Option::create(null, "xOffset", GetOpt::REQUIRED_ARGUMENT)
+			->setDescription('Option to offset the flame default: 0')
+			->setValidation(function ($value)
+			{
+				return is_numeric($value);
+			}),
+
+		Option::create(null, "yOffset", GetOpt::REQUIRED_ARGUMENT)
+			->setDescription('Option to offset the flame default: 0')
+			->setValidation(function ($value)
+			{
+				return is_numeric($value);
+			})
 	]);
 
 	// process arguments and catch user errors
