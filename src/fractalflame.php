@@ -15,6 +15,7 @@ $iterations = $arguments["iterations"] ?? 1000000;
 $imageSize = $arguments["imageSize"] ?? 2024;
 $zoom = $arguments["zoom"] ?? 1;
 $gamma = $arguments["gamma"] ?? 4;
+$outputPath = ($arguments["o"] ?? "./output").".png";
 
 $iterationsPerStep = $iterations / 100;
 $iterationStep = 0;
@@ -120,4 +121,4 @@ for ($i = 0; $i < $iterations; $i++)
 	}
 }
 
-imagepng($image, "output.png", 6);
+imagepng($image, $outputPath, 6);
