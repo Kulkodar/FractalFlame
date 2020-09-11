@@ -77,7 +77,10 @@ function checkArguments() : array
 			->setValidation(function ($value)
 			{
 				return is_numeric($value);
-			})
+			}),
+
+		Option::create(null, "listColorPalettes", GetOpt::NO_ARGUMENT)
+			->setDescription('Lists all available color palettes')
 	]);
 
 	// process arguments and catch user errors
@@ -98,6 +101,19 @@ function checkArguments() : array
 	{
 		echo PHP_EOL . $getOpt->getHelpText();
 		exit;
+	}
+
+	if($getOpt->getOption("listColorPalettes"))
+	{
+		echo "Available Color Palettes:\n";
+
+		foreach ($files = glob(__DIR__ . "/colorPalettes/*") as $file)
+		{
+			$basename = basename($file, ".php");
+			echo $basename . "\n";
+		}
+
+		die;
 	}
 
 	return $getOpt->getOptions();
