@@ -80,7 +80,10 @@ function checkArguments() : array
 			}),
 
 		Option::create(null, "listColorPalettes", GetOpt::NO_ARGUMENT)
-			->setDescription('Lists all available color palettes')
+			->setDescription('Lists all available color palettes'),
+
+		Option::create(null, "listFlames", GetOpt::NO_ARGUMENT)
+			->setDescription('Lists all available flames')
 	]);
 
 	// process arguments and catch user errors
@@ -108,6 +111,19 @@ function checkArguments() : array
 		echo "Available Color Palettes:\n";
 
 		foreach ($files = glob(__DIR__ . "/colorPalettes/*") as $file)
+		{
+			$basename = basename($file, "");
+			echo $basename . "\n";
+		}
+
+		die;
+	}
+
+	if($getOpt->getOption("listFlames"))
+	{
+		echo "Available Flames:\n";
+
+		foreach ($files = glob(__DIR__ . "/flames/*") as $file)
 		{
 			$basename = basename($file, ".php");
 			echo $basename . "\n";
