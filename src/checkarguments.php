@@ -79,6 +79,13 @@ function checkArguments() : array
 				return is_numeric($value);
 			}),
 
+		Option::create(null, "superSampling", GetOpt::REQUIRED_ARGUMENT)
+			->setDescription('Option set super sampling default: 1')
+			->setValidation(function ($value)
+			{
+				return is_numeric($value) && intval($value) > 0;
+			}),
+
 		Option::create(null, "listColorPalettes", GetOpt::NO_ARGUMENT)
 			->setDescription('Lists all available color palettes'),
 

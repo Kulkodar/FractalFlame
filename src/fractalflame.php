@@ -18,10 +18,13 @@ $gamma = $arguments["gamma"] ?? 4;
 $outputPath = ($arguments["o"] ?? "./output") . ".png";
 $xOffset = $arguments["xOffset"] ?? 0;
 $yOffset = $arguments["yOffset"] ?? 0;
+$superSampling = $arguments["superSampling"] ?? 1;
 
 $iterationsPerStep = $iterations / 100;
 $iterationStep = 0;
 $progress = 0;
+
+$imageSize *= $superSampling;
 
 $image = imagecreatetruecolor($imageSize, $imageSize);
 $pixelColorIndex = [];
@@ -73,6 +76,61 @@ for ($i = 0; $i < $iterations; $i++)
 		$progress += 1;
 		echo "progress:$progress\n";
 	}
+}
+
+if ($superSampling > 1)
+{
+	$displaySize = $imageSize / $superSampling;
+	$displayImage = imagecreatetruecolor($displaySize, $displaySize);
+	$divisor = $superSampling * $superSampling;
+
+	for ($x = 0; $x < $displaySize-1; $x++)
+	{
+		for ($y = 0; $y < $displaySize-1; $y++)
+		{
+			$sumFrequency = 0;
+
+			for ($superSampledX = 0; $superSampledX < $superSampling; $superSampledX++)
+			{
+				for ($superSampledY = 0; $superSampledY < $superSampling; $superSampledY++)
+				{
+					$x1 = $x * $superSampling + $superSampledX;
+					$y1 = $y * $superSampling + $superSampledY;
+
+					$sumFrequency += imagecolorat($image, $x1, $y1);
+				}
+			}
+
+			imagesetpixel($displayImage, $x, $y, $sumFrequency/$divisor);
+		}
+	}
+	imagedestroy($image);
+	$image = $displayImage;
+
+	$displayPixelColorIndex=[];
+
+	for ($x = 0; $x < $displaySize-1; $x++)
+	{
+		for ($y = 0; $y < $displaySize-1; $y++)
+		{
+			$sumColor = 0;
+
+			for ($superSampledX = 0; $superSampledX < $superSampling; $superSampledX++)
+			{
+				for ($superSampledY = 0; $superSampledY < $superSampling; $superSampledY++)
+				{
+					$x1 = $x * $superSampling + $superSampledX;
+					$y1 = $y * $superSampling + $superSampledY;
+
+					$sumColor += $pixelColorIndex[$x1][$y1];
+				}
+			}
+
+			$displayPixelColorIndex[$x][$y]=$sumColor/$divisor;
+		}
+	}
+	$pixelColorIndex = $displayPixelColorIndex;
+	$imageSize = $displaySize-1;
 }
 
 // coloring
