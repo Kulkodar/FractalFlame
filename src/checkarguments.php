@@ -77,7 +77,20 @@ function checkArguments() : array
 			->setValidation(function ($value)
 			{
 				return is_numeric($value);
-			})
+			}),
+
+		Option::create(null, "superSampling", GetOpt::REQUIRED_ARGUMENT)
+			->setDescription('Option set super sampling default: 1')
+			->setValidation(function ($value)
+			{
+				return is_numeric($value) && intval($value) > 0;
+			}),
+
+		Option::create(null, "listColorPalettes", GetOpt::NO_ARGUMENT)
+			->setDescription('Lists all available color palettes'),
+
+		Option::create(null, "listFlames", GetOpt::NO_ARGUMENT)
+			->setDescription('Lists all available flames')
 	]);
 
 	// process arguments and catch user errors
@@ -98,6 +111,32 @@ function checkArguments() : array
 	{
 		echo PHP_EOL . $getOpt->getHelpText();
 		exit;
+	}
+
+	if($getOpt->getOption("listColorPalettes"))
+	{
+		echo "Available Color Palettes:\n";
+
+		foreach ($files = glob(__DIR__ . "/colorPalettes/*") as $file)
+		{
+			$basename = basename($file, "");
+			echo $basename . "\n";
+		}
+
+		die;
+	}
+
+	if($getOpt->getOption("listFlames"))
+	{
+		echo "Available Flames:\n";
+
+		foreach ($files = glob(__DIR__ . "/flames/*") as $file)
+		{
+			$basename = basename($file, ".php");
+			echo $basename . "\n";
+		}
+
+		die;
 	}
 
 	return $getOpt->getOptions();
